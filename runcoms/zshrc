@@ -1,13 +1,57 @@
-#
-# Executes commands at the start of an interactive session.
-#
-# Authors:
-#   Sorin Ionescu <sorin.ionescu@gmail.com>
-#
-
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-# Customize to your needs...
+# Personal Aliases & Functions
+pif () {
+	pip install $* && pip freeze > requirements.txt
+}
+
+dbtp () {
+    docker build \
+        -t 721737704817.dkr.ecr.us-east-1.amazonaws.com/"$1":latest \
+        -t 721737704817.dkr.ecr.us-east-1.amazonaws.com/"$1":"$2" . \
+        && docker push 721737704817.dkr.ecr.us-east-1.amazonaws.com/"$1":"$2" \
+        && docker push 721737704817.dkr.ecr.us-east-1.amazonaws.com/"$1":latest
+}
+
+alias venv="virtualenv venv"
+alias activate=". venv/bin/activate"
+
+alias refresh="source ~/.zshrc"
+
+alias flaskrun="export FLASK_APP=run.py && export FLASK_DEBUG=1 && flask run"
+
+alias runlocal="export CONFIG_FILE=local_config.json && export DJANGO_SETTINGS_MODULE=service_health.settings.local && ./manage.py runserver"
+alias localshell="export CONFIG_FILE=local_config.json && export DJANGO_SETTINGS_MODULE=service_health.settings.local && ./manage.py shell"
+
+alias prodshell="export CONFIG_FILE=prod_config.json && export DJANGO_SETTINGS_MODULE=service_health.settings.production && ./manage.py shell"
+alias prodman="export CONFIG_FILE=prod_config.json && export DJANGO_SETTINGS_MODULE=service_health.settings.production && ./manage.py"
+
+alias gcob="git checkout -b"
+alias ga="git add"
+alias gcm="git commit -m"
+alias gs="git status"
+alias gd="git diff"
+alias gco="git checkout"
+alias gpull="git pull"
+alias gpush="git push"
+
+alias dps="docker ps -a"
+alias docom="docker-compose"
+alias drmi="docker rmi $(docker images -q)"
+alias golocal="docker exec -ti service_health_web_1 bash"
+
+alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
+alias hideFiles='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
+
+alias tf="terraform"
+
+export PATH="/Users/username/.pyenv:$PATH"
+if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+export GOPATH=$HOME/Code
+export PATH=$PATH:$GOPATH/bin
+export PATH=~/.local/bin:$PATH
