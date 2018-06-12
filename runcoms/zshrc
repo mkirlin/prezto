@@ -50,8 +50,9 @@ alias tf="terraform"
 
 export PATH="/Users/username/.pyenv:$PATH"
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+eval "$(rbenv init -)"
 
 export GOPATH=$HOME/Code
 export PATH=$PATH:$GOPATH/bin
 export PATH=~/.local/bin:$PATH
+eval $(thefuck --alias)
