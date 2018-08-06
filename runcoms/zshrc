@@ -5,7 +5,7 @@ fi
 
 # Personal Aliases & Functions
 pif () {
-	pip install $* && pip freeze > requirements.txt
+	pip install $* && pip freeze >! requirements.txt
 }
 
 dbtp () {
@@ -16,8 +16,17 @@ dbtp () {
         && docker push 721737704817.dkr.ecr.us-east-1.amazonaws.com/"$1":latest
 }
 
+listening_on() {
+    lsof -nP -i4TCP:"$1" | grep LISTEN
+}
+
+rtwt() {
+    grep -rl "$1" . | xargs sed -i '' -e 's@"$1"@"$2"@g'
+}
+
 alias venv="virtualenv venv"
 alias activate=". venv/bin/activate"
+alias pe="pipenv"
 
 alias refresh="source ~/.zshrc"
 
@@ -29,14 +38,14 @@ alias localshell="export CONFIG_FILE=local_config.json && export DJANGO_SETTINGS
 alias prodshell="export CONFIG_FILE=prod_config.json && export DJANGO_SETTINGS_MODULE=service_health.settings.production && ./manage.py shell"
 alias prodman="export CONFIG_FILE=prod_config.json && export DJANGO_SETTINGS_MODULE=service_health.settings.production && ./manage.py"
 
-alias gcob="git checkout -b"
-alias ga="git add"
-alias gcm="git commit -m"
-alias gs="git status"
-alias gd="git diff"
-alias gco="git checkout"
-alias gpull="git pull"
-alias gpush="git push"
+# alias gcob="git checkout -b"
+# alias ga="git add"
+# alias gcm="git commit -m"
+# alias gs="git status"
+# alias gd="git diff"
+# alias gco="git checkout"
+# alias gpull="git pull"
+# alias gpush="git push"
 
 alias dps="docker ps -a"
 alias docom="docker-compose"
@@ -47,12 +56,23 @@ alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall 
 alias hideFiles='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
 
 alias tf="terraform"
+alias sl="serverless"
 
 export PATH="/Users/username/.pyenv:$PATH"
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+
 eval "$(rbenv init -)"
+eval "$(ssh-agent -s)"  >/dev/null 2>&1
+ssh-add -K ~/.ssh/github_id_rsa  >/dev/null 2>&1
 
 export GOPATH=$HOME/Code
 export PATH=$PATH:$GOPATH/bin
 export PATH=~/.local/bin:$PATH
 eval $(thefuck --alias)
+
+# tabtab source for serverless package
+# uninstall by removing these lines or running `tabtab uninstall serverless`
+[[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
+# tabtab source for sls package
+# uninstall by removing these lines or running `tabtab uninstall sls`
+[[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
